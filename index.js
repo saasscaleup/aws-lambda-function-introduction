@@ -1,6 +1,9 @@
 // Load aws sdk
 var aws = require('aws-sdk');
 
+// Load https request
+var https = require('https');
+
 exports.handler = (event, context, callback) => {
     
     // Declare response function
@@ -15,16 +18,16 @@ exports.handler = (event, context, callback) => {
         }
     };
     
-    // Set ec2 instance with aws account region
-    const ec2 = new aws.EC2({ region: event.instanceRegion });
-    
-    // Set instance ID
-    const params = {
-      InstanceIds: [event.instanceId],
-    };
-    
     if (event.action === "START") {
 
+        // Set ec2 instance with aws account region
+        var ec2 = new aws.EC2({ region: event.instanceRegion });
+
+        // Set instance ID
+        var params = {
+          InstanceIds: [event.instanceId],
+        };
+        
         // Call EC2 to start the selected instances
         ec2.startInstances(params, function(error, data) {
             if (error) {
@@ -33,7 +36,16 @@ exports.handler = (event, context, callback) => {
                 callback(null,response(true, data));
             }
          });
+        
     } else if (event.action === "STOP") {
+        
+        // Set ec2 instance with aws account region
+        var ec2 = new aws.EC2({ region: event.instanceRegion });
+
+        // Set instance ID
+        var params = {
+          InstanceIds: [event.instanceId],
+        };
         
         // Call EC2 to stop the selected instances
         ec2.stopInstances(params, function(error, data) {
